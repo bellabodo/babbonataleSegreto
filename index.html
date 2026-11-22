@@ -133,7 +133,7 @@ footer{font-size:12px;color:var(--muted);text-align:center;display:flex;flex-dir
   </section>
 
   <footer>
-    <span>Gli abbinamenti sono cifrati con la parola segreta di ciascuno.</span>
+    <span>Gli abbinamenti sono cifrati con la password di ciascuno.</span>
     <button class="link" id="adminOpen" type="button">Sei l'organizzatore?</button>
     <form id="adminLogin" hidden style="max-width:320px;margin:0 auto;width:100%">
       <label style="text-align:left">Password organizzatore<input id="adminPwd" type="password" autocomplete="current-password"></label>
@@ -192,7 +192,7 @@ footer{font-size:12px;color:var(--muted);text-align:center;display:flex;flex-dir
   async function openEnvelope(b, pin){
     let raw;
     try { raw = await crypto.subtle.decrypt({name:"AES-GCM", iv:unb64(b.iv)}, await pinKey(pin, unb64(b.salt)), unb64(b.priv)); }
-    catch { throw new Error("Parola segreta sbagliata. Riprova."); }
+    catch { throw new Error("Password sbagliata. Riprova."); }
     const key = await crypto.subtle.importKey("pkcs8", raw, {name:"RSA-OAEP", hash:"SHA-256"}, false, ["decrypt"]);
     return dec.decode(await crypto.subtle.decrypt({name:"RSA-OAEP"}, key, unb64(b.c)));
   }
@@ -214,7 +214,7 @@ footer{font-size:12px;color:var(--muted);text-align:center;display:flex;flex-dir
     for (const id of ["joinName","joinPin","joinBtn"]) $(id).disabled = drawn || busy;
     if (drawn && !$("joinMsg").classList.contains("ok")) setMsg($("joinMsg"), "L'estrazione è già stata fatta: le iscrizioni sono chiuse.");
 
-    $("revealIntro").textContent = drawn ? "Scegli il tuo nome e inserisci la parola segreta che hai usato all'iscrizione."
+    $("revealIntro").textContent = drawn ? "Scegli il tuo nome e inserisci la password che hai usato all'iscrizione."
       : "L'estrazione non è ancora stata fatta. Torna qui quando l'organizzatore la avvia.";
     $("revealForm").hidden = !drawn;
     const sel = $("revealWho"), prev = sel.value || store.get("bns-me") || "";
@@ -256,13 +256,13 @@ footer{font-size:12px;color:var(--muted);text-align:center;display:flex;flex-dir
     e.preventDefault();
     const nome = $("joinName").value.trim().replace(/\s+/g, " "), pin = $("joinPin").value, msg = $("joinMsg");
     if (nome.length < 2) return setMsg(msg, "Scrivi un nome di almeno 2 lettere.", "err");
-    if (pin.length < 4) return setMsg(msg, "La parola segreta deve avere almeno 4 caratteri.", "err");
+    if (pin.length < 4) return setMsg(msg, "La password deve avere almeno 4 caratteri.", "err");
     if (people.some(p => p.nome.toLowerCase() === nome.toLowerCase())) return setMsg(msg, `C'è già un "${nome}". Aggiungi l'iniziale del cognome.`, "err");
     busy = true; render(); setMsg(msg, "Ti metto nel cappello…");
     try {
       const r = await call("iscrivi", { nome, ...(await makeIdentity(pin)) });
       store.set("bns-me", r.id); $("joinForm").reset();
-      setMsg(msg, `Fatto, ${r.nome}! Ricordati la parola segreta.`, "ok");
+      setMsg(msg, `Fatto, ${r.nome}! Ricordati la password.`, "ok");
     } catch (err) { setMsg(msg, cleanErr(err), "err"); }
     finally { busy = false; await refresh(); }
   });
