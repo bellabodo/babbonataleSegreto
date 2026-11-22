@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Babbo Natale Segreto</title>
+<meta name="theme-color" content="#1f5a45">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Inter:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#eef3f1; --card:#ffffff; --fg:#14231d; --muted:#5b6d66; --line:#d3dfda;
+  --pine:#1f5a45; --pine-fg:#ffffff; --berry:#b3263d; --gold:#c9932b; --soft:#e3ece8;
+  --ok:#1f7a4d; --err:#b3263d;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
+  --body:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#0f1714; --card:#17221e; --fg:#e7efeb; --muted:#9aaea6; --line:#2a3a34;
+  --pine:#3f9a77; --pine-fg:#08130e; --berry:#ec6b7f; --gold:#e3b456; --soft:#1e2c27;
+  --ok:#5fcf96; --err:#ff8a9b; color-scheme:dark}}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+html,body{margin:0}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.5;padding:calc(28px + env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) calc(48px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.wrap{max-width:520px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+header{display:flex;flex-direction:column;gap:6px}
+.tag{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--berry);font-weight:600}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(30px,8vw,42px);line-height:1.05;margin:0}
+h2{font-family:var(--display);font-weight:600;font-size:20px;margin:0}
+p{margin:0}
+[hidden]{display:none!important}
+.muted{color:var(--muted)}
+.status{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:4px 12px;font-size:13px;font-weight:600;background:var(--soft)}
+.pill::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--gold)}
+.pill.done::before{background:var(--ok)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:14px}
+.tabs{display:flex;gap:6px;background:var(--soft);padding:4px;border-radius:12px}
+.tabs button{flex:1;touch-action:manipulation;-webkit-tap-highlight-color:transparent;border:0;background:transparent;color:var(--muted);font:600 14px var(--body);padding:9px 6px;border-radius:9px;cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--card);color:var(--fg);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+form{display:flex;flex-direction:column;gap:12px}
+label{font-size:13px;font-weight:600;display:flex;flex-direction:column;gap:6px}
+input,select{font-family:inherit;font-size:16px;line-height:1.3;-webkit-appearance:none;appearance:none;min-height:46px;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:11px 12px;width:100%}
+input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--pine);outline-offset:2px}
+.btn{touch-action:manipulation;-webkit-tap-highlight-color:transparent;font:600 16px var(--body);border:0;border-radius:10px;padding:12px 16px;cursor:pointer;background:var(--pine);color:var(--pine-fg)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.ghost{background:transparent;color:var(--fg);border:1px solid var(--line)}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.row .btn{flex:1;min-width:140px}
+.msg{font-size:14px}
+.msg.err{color:var(--err)} .msg.ok{color:var(--ok)}
+ul.people{list-style:none;margin:0;padding:0}
+ul.people li{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-top:1px solid var(--line)}
+ul.people li:first-child{border-top:0}
+ul.people .n{overflow-wrap:anywhere;min-width:0}
+select{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 20px) 55%,calc(100% - 15px) 55%;background-size:5px 5px;background-repeat:no-repeat;padding-right:36px}
+.x{border:1px solid var(--line);background:transparent;color:var(--muted);border-radius:8px;padding:4px 10px;font:500 13px var(--body);cursor:pointer}
+.reveal{border:2px dashed var(--gold);border-radius:14px;padding:22px;text-align:center;display:flex;flex-direction:column;gap:6px}
+.reveal .who{font-family:var(--display);font-weight:800;font-size:34px;color:var(--berry);overflow-wrap:anywhere}
+.confirm{background:var(--soft);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.empty{color:var(--muted);font-size:14px}
+.count{font-variant-numeric:tabular-nums}
+.link{background:none;border:0;color:var(--muted);font:500 13px var(--body);text-decoration:underline;cursor:pointer;align-self:center}
+footer{font-size:12px;color:var(--muted);text-align:center;display:flex;flex-direction:column;gap:8px}
+@media (prefers-reduced-motion:no-preference){.reveal{animation:pop .35s ease-out}@keyframes pop{from{transform:scale(.96);opacity:.4}to{transform:none;opacity:1}}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <span class="tag">Scambio di regali</span>
+    <h1>Babbo Natale Segreto</h1>
+    <div class="status">
+      <span id="statePill" class="pill">Iscrizioni aperte</span>
+      <span class="muted count" id="countLine">Caricamento…</span>
+    </div>
+  </header>
+
+  <nav class="tabs" role="tablist">
+    <button role="tab" id="tab-join" aria-selected="true">Iscriviti</button>
+    <button role="tab" id="tab-reveal" aria-selected="false">Scopri a chi regali</button>
+    <button role="tab" id="tab-admin" aria-selected="false" hidden>Organizza</button>
+  </nav>
+
+  <section class="card" id="pane-join">
+    <h2>Metti il tuo nome nel cappello</h2>
+    <p class="muted">Scegli anche una parola segreta: ti servirà dopo l'estrazione per vedere chi ti è toccato. Nessun altro potrà vederlo, nemmeno l'organizzatore.</p>
+    <form id="joinForm">
+      <label>Il tuo nome<input id="joinName" maxlength="40" autocomplete="off" placeholder="Es. Giulia" required></label>
+      <label>Parola segreta (almeno 4 caratteri)<input id="joinPin" type="password" minlength="4" maxlength="64" autocomplete="new-password" required></label>
+      <button class="btn" id="joinBtn" type="submit">Iscriviti</button>
+      <p class="msg" id="joinMsg"></p>
+    </form>
+    <div>
+      <p class="muted" style="font-size:13px;font-weight:600;margin-bottom:4px">Già nel cappello</p>
+      <ul class="people" id="peopleList"></ul>
+    </div>
+  </section>
+
+  <section class="card" id="pane-reveal" hidden>
+    <h2>Scopri a chi fai il regalo</h2>
+    <p class="muted" id="revealIntro"></p>
+    <form id="revealForm">
+      <label>Chi sei?<select id="revealWho"></select></label>
+      <label>La tua parola segreta<input id="revealPin" type="password" autocomplete="current-password" required></label>
+      <button class="btn" id="revealBtn" type="submit">Mostra il mio abbinamento</button>
+      <p class="msg" id="revealMsg"></p>
+    </form>
+    <div id="revealBox" class="reveal" hidden>
+      <span class="muted">Fai il regalo a</span>
+      <span class="who" id="revealName"></span>
+      <span class="muted" style="font-size:13px">Acqua in bocca.</span>
+    </div>
+  </section>
+
+  <section class="card" id="pane-admin" hidden>
+    <h2>Pannello organizzatore</h2>
+    <p class="muted">Quando ci sono tutti, avvia l'estrazione. Ognuno estrae una persona diversa da sé e ogni nome esce una volta sola. Servono almeno 3 iscritti.</p>
+    <ul class="people" id="adminList"></ul>
+    <div class="row">
+      <button class="btn" id="drawBtn" type="button">Estrai i nomi</button>
+      <button class="btn ghost" id="undoBtn" type="button" hidden>Annulla estrazione</button>
+    </div>
+    <div class="confirm" id="confirmBox" hidden>
+      <p id="confirmText"></p>
+      <div class="row">
+        <button class="btn" id="confirmYes" type="button">Conferma</button>
+        <button class="btn ghost" id="confirmNo" type="button">Lascia stare</button>
+      </div>
+    </div>
+    <p class="msg" id="adminMsg"></p>
+  </section>
+
+  <footer>
+    <span>Gli abbinamenti sono cifrati con la parola segreta di ciascuno.</span>
+    <button class="link" id="adminOpen" type="button">Sei l'organizzatore?</button>
+    <form id="adminLogin" hidden style="max-width:320px;margin:0 auto;width:100%">
+      <label style="text-align:left">Password organizzatore<input id="adminPwd" type="password" autocomplete="current-password"></label>
+      <button class="btn ghost" type="submit">Entra</button>
+      <p class="msg" id="loginMsg"></p>
+    </form>
+  </footer>
+</div>
+
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const enc = new TextEncoder(), dec = new TextDecoder();
+  const b64 = buf => btoa(String.fromCharCode(...new Uint8Array(buf)));
+  const unb64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+  const store = { get(k){try{return localStorage.getItem(k)}catch{return null}}, set(k,v){try{localStorage.setItem(k,v)}catch{}} };
+  // URL dell'app web di Apps Script (finisce con /exec)
+  const API_URL = "INCOLLA_QUI_URL_EXEC";
+  async function call(fn, ...args){
+    if (!/^https:\/\/script\.google\.com\//.test(API_URL)) throw new Error("Pagina non ancora collegata al server.");
+    let r;
+    try { r = await fetch(API_URL, { method: "POST", body: JSON.stringify({ fn, args }) }); }
+    catch { throw new Error("Connessione non riuscita. Controlla la rete e riprova."); }
+    let data;
+    try { data = await r.json(); } catch { throw new Error("Il server non risponde bene. Riprova tra poco."); }
+    if (data.err) throw new Error(data.err);
+    return data.ok;
+  }
+
+  let lastSig = "", people = [], drawn = false, adminPwd = null, pending = null, busy = false;
+
+  // ---------- tabs ----------
+  const panes = { join: $("pane-join"), reveal: $("pane-reveal"), admin: $("pane-admin") };
+  function showTab(name){ for (const k in panes){ panes[k].hidden = k !== name; $("tab-"+k).setAttribute("aria-selected", String(k===name)); } }
+  for (const k in panes) $("tab-"+k).addEventListener("click", () => showTab(k));
+  const setMsg = (el, text, kind) => { el.textContent = text || ""; el.className = "msg" + (kind ? " "+kind : ""); };
+  const cleanErr = e => String(e.message || e).replace(/^Exception:\s*/, "");
+
+  // ---------- crypto ----------
+  async function pinKey(pin, salt){
+    const base = await crypto.subtle.importKey("raw", enc.encode(pin), "PBKDF2", false, ["deriveKey"]);
+    return crypto.subtle.deriveKey({name:"PBKDF2", salt, iterations:250000, hash:"SHA-256"}, base, {name:"AES-GCM", length:256}, false, ["encrypt","decrypt"]);
+  }
+  async function makeIdentity(pin){
+    const kp = await crypto.subtle.generateKey({name:"RSA-OAEP", modulusLength:2048, publicExponent:new Uint8Array([1,0,1]), hash:"SHA-256"}, true, ["encrypt","decrypt"]);
+    const pub = await crypto.subtle.exportKey("spki", kp.publicKey);
+    const priv = await crypto.subtle.exportKey("pkcs8", kp.privateKey);
+    const salt = crypto.getRandomValues(new Uint8Array(16)), iv = crypto.getRandomValues(new Uint8Array(12));
+    const wrapped = await crypto.subtle.encrypt({name:"AES-GCM", iv}, await pinKey(pin, salt), priv);
+    return { pub: b64(pub), priv: b64(wrapped), salt: b64(salt), iv: b64(iv) };
+  }
+  async function encryptFor(pubB64, text){
+    const key = await crypto.subtle.importKey("spki", unb64(pubB64), {name:"RSA-OAEP", hash:"SHA-256"}, false, ["encrypt"]);
+    return b64(await crypto.subtle.encrypt({name:"RSA-OAEP"}, key, enc.encode(text)));
+  }
+  async function openEnvelope(b, pin){
+    let raw;
+    try { raw = await crypto.subtle.decrypt({name:"AES-GCM", iv:unb64(b.iv)}, await pinKey(pin, unb64(b.salt)), unb64(b.priv)); }
+    catch { throw new Error("Parola segreta sbagliata. Riprova."); }
+    const key = await crypto.subtle.importKey("pkcs8", raw, {name:"RSA-OAEP", hash:"SHA-256"}, false, ["decrypt"]);
+    return dec.decode(await crypto.subtle.decrypt({name:"RSA-OAEP"}, key, unb64(b.c)));
+  }
+
+  // ---------- render ----------
+  function li(text, cls){ const l = document.createElement("li"); const s = document.createElement("span"); s.className = cls || "n"; s.textContent = text; l.append(s); return l; }
+  function render(){
+    const n = people.length;
+    $("countLine").textContent = n === 1 ? "1 iscritto" : n + " iscritti";
+    $("statePill").textContent = drawn ? "Estrazione fatta" : "Iscrizioni aperte";
+    $("statePill").className = "pill" + (drawn ? " done" : "");
+
+    const sig = JSON.stringify([people, drawn, !!adminPwd, busy]);
+    const same = sig === lastSig; lastSig = sig;
+    if (same) return;
+    const list = $("peopleList"); list.replaceChildren();
+    if (!n) list.append(li("Ancora nessuno. Sii il primo a iscriverti.", "empty"));
+    people.forEach(p => list.append(li(p.nome)));
+    for (const id of ["joinName","joinPin","joinBtn"]) $(id).disabled = drawn || busy;
+    if (drawn && !$("joinMsg").classList.contains("ok")) setMsg($("joinMsg"), "L'estrazione è già stata fatta: le iscrizioni sono chiuse.");
+
+    $("revealIntro").textContent = drawn ? "Scegli il tuo nome e inserisci la parola segreta che hai usato all'iscrizione."
+      : "L'estrazione non è ancora stata fatta. Torna qui quando l'organizzatore la avvia.";
+    $("revealForm").hidden = !drawn;
+    const sel = $("revealWho"), prev = sel.value || store.get("bns-me") || "";
+    sel.replaceChildren(new Option("Scegli il tuo nome", ""));
+    people.forEach(p => sel.append(new Option(p.nome, p.id)));
+    if (people.some(p => p.id === prev)) sel.value = prev;
+
+    $("tab-admin").hidden = !adminPwd;
+    $("adminOpen").hidden = !!adminPwd;
+    const al = $("adminList"); al.replaceChildren();
+    if (!n) al.append(li("Nessun iscritto per ora.", "empty"));
+    people.forEach(p => {
+      const l = li(p.nome);
+      if (!drawn){ const b = document.createElement("button"); b.className = "x"; b.type = "button"; b.textContent = "Rimuovi";
+        b.addEventListener("click", () => ask(`Rimuovere ${p.nome} dal cappello?`, () => adminDo(() => call("rimuovi", adminPwd, p.id), `${p.nome} rimosso.`))); l.append(b); }
+      al.append(l);
+    });
+    $("drawBtn").hidden = drawn; $("drawBtn").disabled = n < 3 || busy;
+    $("undoBtn").hidden = !drawn;
+  }
+
+  async function refresh(){
+    try { const s = await call("stato"); people = s.persone; drawn = s.estratto; render(); }
+    catch { $("countLine").textContent = "Non riesco a caricare gli iscritti, riprovo…"; }
+  }
+
+  function ask(text, fn){ $("confirmText").textContent = text; pending = fn; $("confirmBox").hidden = false; }
+  $("confirmNo").addEventListener("click", () => { $("confirmBox").hidden = true; pending = null; });
+  $("confirmYes").addEventListener("click", () => { $("confirmBox").hidden = true; const f = pending; pending = null; if (f) f(); });
+
+  async function adminDo(fn, okText){
+    const msg = $("adminMsg"); busy = true; render(); setMsg(msg, "Un attimo…");
+    try { await fn(); setMsg(msg, okText, "ok"); } catch (e) { setMsg(msg, cleanErr(e), "err"); }
+    finally { busy = false; await refresh(); }
+  }
+
+  // ---------- iscrizione ----------
+  $("joinForm").addEventListener("submit", async e => {
+    e.preventDefault();
+    const nome = $("joinName").value.trim().replace(/\s+/g, " "), pin = $("joinPin").value, msg = $("joinMsg");
+    if (nome.length < 2) return setMsg(msg, "Scrivi un nome di almeno 2 lettere.", "err");
+    if (pin.length < 4) return setMsg(msg, "La parola segreta deve avere almeno 4 caratteri.", "err");
+    if (people.some(p => p.nome.toLowerCase() === nome.toLowerCase())) return setMsg(msg, `C'è già un "${nome}". Aggiungi l'iniziale del cognome.`, "err");
+    busy = true; render(); setMsg(msg, "Ti metto nel cappello…");
+    try {
+      const r = await call("iscrivi", { nome, ...(await makeIdentity(pin)) });
+      store.set("bns-me", r.id); $("joinForm").reset();
+      setMsg(msg, `Fatto, ${r.nome}! Ricordati la parola segreta.`, "ok");
+    } catch (err) { setMsg(msg, cleanErr(err), "err"); }
+    finally { busy = false; await refresh(); }
+  });
+
+  // ---------- rivelazione ----------
+  $("revealForm").addEventListener("submit", async e => {
+    e.preventDefault();
+    const msg = $("revealMsg"), id = $("revealWho").value; $("revealBox").hidden = true;
+    if (!id) return setMsg(msg, "Scegli il tuo nome dall'elenco.", "err");
+    $("revealBtn").disabled = true; setMsg(msg, "Apro la busta…");
+    try {
+      const nome = await openEnvelope(await call("busta", id), $("revealPin").value);
+      store.set("bns-me", id); $("revealPin").value = "";
+      $("revealName").textContent = nome; $("revealBox").hidden = false; setMsg(msg, "");
+    } catch (err) { setMsg(msg, cleanErr(err), "err"); }
+    finally { $("revealBtn").disabled = false; }
+  });
+
+  // ---------- organizzatore ----------
+  $("adminOpen").addEventListener("click", () => { $("adminLogin").hidden = false; $("adminPwd").focus(); });
+  $("adminLogin").addEventListener("submit", async e => {
+    e.preventDefault();
+    const pwd = $("adminPwd").value;
+    try { await call("verificaOrganizzatore", pwd); adminPwd = pwd; $("adminLogin").hidden = true; render(); showTab("admin"); }
+    catch (err) { setMsg($("loginMsg"), cleanErr(err), "err"); }
+  });
+
+  function derangement(list){
+    const a = list.slice();
+    for (let i = a.length - 1; i > 0; i--){ const j = crypto.getRandomValues(new Uint32Array(1))[0] % (i + 1); [a[i], a[j]] = [a[j], a[i]]; }
+    // un unico giro: ognuno regala al successivo -> nessuno pesca se stesso, ogni nome esce una volta
+    return a.map((g, i) => [g, a[(i + 1) % a.length]]);
+  }
+  $("drawBtn").addEventListener("click", () => ask(`Estrarre adesso per ${people.length} persone? Dopo l'estrazione le iscrizioni si chiudono.`,
+    () => adminDo(async () => {
+      const keys = await call("chiaviPubbliche", adminPwd);
+      if (keys.length < 3) throw new Error("Servono almeno 3 iscritti.");
+      const buste = [];
+      for (const [g, r] of derangement(keys)) buste.push({ id: g.id, c: await encryptFor(g.pub, r.nome) });
+      await call("salvaEstrazione", adminPwd, buste);
+    }, "Estrazione fatta. Ora ognuno può scoprire il suo abbinamento.")));
+  $("undoBtn").addEventListener("click", () => ask("Annullare l'estrazione? Gli abbinamenti vengono cancellati e le iscrizioni si riaprono.",
+    () => adminDo(() => call("annullaEstrazione", adminPwd), "Estrazione annullata, iscrizioni riaperte.")));
+
+  render(); refresh();
+  setInterval(() => { if (!document.hidden && !busy) refresh(); }, 15000);
+})();
+</script>
+</body>
+</html>
