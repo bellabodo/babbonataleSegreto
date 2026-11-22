@@ -151,7 +151,7 @@ footer{font-size:12px;color:var(--muted);text-align:center;display:flex;flex-dir
   const unb64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
   const store = { get(k){try{return localStorage.getItem(k)}catch{return null}}, set(k,v){try{localStorage.setItem(k,v)}catch{}} };
   // URL dell'app web di Apps Script (finisce con /exec)
-  const API_URL = "INCOLLA_QUI_URL_EXEC";
+  const API_URL = "https://script.google.com/macros/s/AKfycbwy3q-0J3vF0wBwkrqjmuVo1ja98nd82nTI4SzGnI3acvW58BootbpYHVbuGwMe5HX0/exec";
   async function call(fn, ...args){
     if (!/^https:\/\/script\.google\.com\//.test(API_URL)) throw new Error("Pagina non ancora collegata al server.");
     let r;
